@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sample_counter/color/color_cubit.dart';
+import 'package:sample_counter/counter/counter_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +12,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'cubit2cubit',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ColorCubit>(
+          create: (context) => ColorCubit(),
+        ),
+        BlocProvider<CounterCubit>(
+          create: (context) => CounterCubit(
+            colorCubit: context.read<ColorCubit>(),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'cubit2cubit',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -26,6 +41,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.watch<ColorCubit>().state.color,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,12 +51,14 @@ class MyHomePage extends StatelessWidget {
                 'Change Color',
                 style: TextStyle(fontSize: 24.0),
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.read<ColorCubit>().changeColor();
+              },
             ),
             const SizedBox(height: 20.0),
-            const Text(
-              '0',
-              style: TextStyle(
+            Text(
+              '${context.watch<CounterCubit>().state.counter}',
+              style: const TextStyle(
                 fontSize: 52.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -52,7 +70,9 @@ class MyHomePage extends StatelessWidget {
                 'Increment Counter',
                 style: TextStyle(fontSize: 24.0),
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.read<CounterCubit>().changeCounter();
+              },
             ),
           ],
         ),
