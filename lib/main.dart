@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'Event Payload',
             debugShowCheckedModeBanner: false,
-            theme: state.appTheme == AppTheme.light
+            theme: context.watch<ThemeBloc>().state.appTheme == AppTheme.light
                 ? ThemeData.light()
                 : ThemeData.dark(),
             home: const MyHomePage(),
