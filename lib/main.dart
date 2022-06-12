@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sample_counter/counter/counter_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +11,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MyCounter Cubit',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider<CounterCubit>(
+      create: (context) => CounterCubit(),
+      child: MaterialApp(
+        title: 'MyCounter Cubit',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -25,29 +30,37 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
-        child: Text(
-          '0',
-          style: TextStyle(fontSize: 52.0),
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'increment',
-            child: const Icon(Icons.add),
+    return BlocBuilder<CounterCubit, CounterState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Center(
+            child: Text(
+              '${state.counter}',
+              style: const TextStyle(fontSize: 52.0),
+            ),
           ),
-          const SizedBox(width: 10.0),
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'decrement',
-            child: const Icon(Icons.remove),
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  BlocProvider.of<CounterCubit>(context).increment();
+                },
+                heroTag: 'increment',
+                child: const Icon(Icons.add),
+              ),
+              const SizedBox(width: 10.0),
+              FloatingActionButton(
+                onPressed: () {
+                  BlocProvider.of<CounterCubit>(context).decrement();
+                },
+                heroTag: 'decrement',
+                child: const Icon(Icons.remove),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
