@@ -1,4 +1,4 @@
-part of 'counter_cubit.dart';
+part of 'cubit/counter_cubit.dart';
 
 /*
 * An abstract class called CounterState that extends Equatable

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sample_counter/counter/counter_cubit.dart';
+import 'package:sample_counter/counter/bloc/counter_bloc.dart';
 import 'package:sample_counter/screens/other_page.dart';
 
 void main() {
@@ -12,8 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CounterCubit>(
-      create: (context) => CounterCubit(),
+    return BlocProvider(
+      create: (context) => CounterBloc(),
       child: MaterialApp(
         title: 'MyCounter Cubit',
         debugShowCheckedModeBanner: false,
@@ -31,7 +31,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CounterCubit, CounterState>(
+    return BlocListener<CounterBloc, CounterState>(
       listener: (context, state) {
         if (state.counter == 3) {
           showDialog(
@@ -50,36 +50,34 @@ class MyHomePage extends StatelessWidget {
           );
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          body: Center(
-            child: Text(
-              '${state.counter}',
-              style: const TextStyle(fontSize: 52.0),
+      child: Scaffold(
+        body: Center(
+          child: Text(
+            '${context.watch<CounterBloc>().state.counter}',
+            style: const TextStyle(fontSize: 52.0),
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                context.read<CounterBloc>().add(IncrementCounterEvent());
+              },
+              heroTag: 'increment',
+              child: const Icon(Icons.add),
             ),
-          ),
-          floatingActionButton: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  context.read<CounterCubit>().increment();
-                },
-                heroTag: 'increment',
-                child: const Icon(Icons.add),
-              ),
-              const SizedBox(width: 10.0),
-              FloatingActionButton(
-                onPressed: () {
-                  context.read<CounterCubit>().decrement();
-                },
-                heroTag: 'decrement',
-                child: const Icon(Icons.remove),
-              ),
-            ],
-          ),
-        );
-      },
+            const SizedBox(width: 10.0),
+            FloatingActionButton(
+              onPressed: () {
+                context.read<CounterBloc>().add(DecrementCounterEvent());
+              },
+              heroTag: 'decrement',
+              child: const Icon(Icons.remove),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
