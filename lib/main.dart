@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MyCounter Cubit',
+      title: 'cubit2cubit',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -26,27 +26,36 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text(
-          '0',
-          style: TextStyle(fontSize: 52.0),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              child: const Text(
+                'Change Color',
+                style: TextStyle(fontSize: 24.0),
+              ),
+              onPressed: () {},
+            ),
+            const SizedBox(height: 20.0),
+            const Text(
+              '0',
+              style: TextStyle(
+                fontSize: 52.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              child: const Text(
+                'Increment Counter',
+                style: TextStyle(fontSize: 24.0),
+              ),
+              onPressed: () {},
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'increment',
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(width: 10.0),
-          FloatingActionButton(
-            onPressed: () {},
-            heroTag: 'decrement',
-            child: const Icon(Icons.remove),
-          ),
-        ],
       ),
     );
   }
